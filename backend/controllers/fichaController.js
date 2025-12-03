@@ -10,13 +10,11 @@ export const criarFicha = async (req, res) => {
             return res.status(400).json({ error: 'Número da ficha e itens são obrigatórios' });
         }
 
-        // Verificar se número já existe
         const fichaExistente = await Ficha.buscarPorNumero(numero);
         if (fichaExistente) {
             return res.status(400).json({ error: 'Já existe uma ficha com este número' });
         }
 
-        // Validar itens e buscar preços
         const itensComPrecos = [];
         for (const item of itens) {
             const produto = await Produto.buscarPorId(item.produto_id);
@@ -53,10 +51,15 @@ export const criarFicha = async (req, res) => {
 export const buscarFicha = async (req, res) => {
     try {
         const { numero } = req.params;
-        const ficha = await Ficha.buscarPorNumero(numero);
+        const { admin = false } = req.query; // Novo parâmetro
+        
+        // Se for admin, pode ver fichas confirmadas
+        const ficha = await Ficha.buscarPorNumero(numero, admin === 'true');
         
         if (!ficha) {
-            return res.status(404).json({ error: 'Ficha não encontrada' });
+            return res.status(404).json({ 
+                error: 'Ficha não encontrada ou já foi finalizada'
+            });
         }
         
         res.json(ficha);
@@ -97,6 +100,35 @@ export const dashboard = async (req, res) => {
         });
     } catch (error) {
         console.error('Erro ao carregar dashboard:', error);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+};
+
+export const confirmarFicha = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const usuarioId = req.user.id;
+        
+        const ficha = await Ficha.confirmarFicha(id, usuarioId);
+        
+        res.json({
+            success: true,
+            message: 'Ficha confirmada com sucesso!',
+            ficha
+        });
+        
+    } catch (error) {
+        console.error('Erro ao confirmar ficha:', error);
+        res.status(400).json({ error: error.message });
+    }
+};
+
+export const listarPendentes = async (req, res) => {
+    try {
+        const fichas = await Ficha.listarPendentes();
+        res.json(fichas);
+    } catch (error) {
+        console.error('Erro ao listar fichas pendentes:', error);
         res.status(500).json({ error: 'Erro interno do servidor' });
     }
 };

@@ -90,4 +90,51 @@ document.addEventListener('DOMContentLoaded', () => {
         // Validar token com a API
         validateToken();
     }
+    // Atualizar a navegação para carregar fichas pendentes
+navTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        // ... código existente ...
+        
+        // Adicionar esta condição:
+        if (target === 'fichas-pendentes') {
+            loadPendingFichas();
+        }
+    });
+});
+
+// Botão de atualizar fichas pendentes
+document.getElementById('refresh-pendentes')?.addEventListener('click', () => {
+    loadPendingFichas();
+});
+// No final do arquivo, adicione:
+
+// Botão de atualizar fichas pendentes
+document.getElementById('refresh-pendentes')?.addEventListener('click', () => {
+    loadPendingFichas();
+});
+
+// Modifique a navegação para carregar fichas pendentes
+navTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-target');
+        
+        navTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        sections.forEach(section => {
+            section.classList.remove('active');
+            if (section.id === target) {
+                section.classList.add('active');
+            }
+        });
+        
+        if (target === 'dashboard') {
+            updateDashboard();
+        } else if (target === 'estoque') {
+            loadProductsTable();
+        } else if (target === 'fichas-pendentes') {
+            loadPendingFichas();  // NOVA LINHA
+        }
+    });
+});
 });
