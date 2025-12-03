@@ -137,4 +137,53 @@ navTabs.forEach(tab => {
         }
     });
 });
+// Teste manual da função salvar
+window.testeSalvarFicha = async function() {
+    console.log('=== TESTE MANUAL ===');
+    
+    const token = getToken();
+    if (!token) {
+        console.error('❌ SEM TOKEN - Faça login primeiro');
+        return;
+    }
+    
+    // Teste simples
+    const testData = {
+        numero: 'TESTE_' + Date.now(),
+        itens: [
+            { produto_id: 1, quantidade: 1 }
+        ]
+    };
+    
+    console.log('Enviando:', testData);
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/fichas`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(testData)
+        });
+        
+        console.log('Status:', response.status);
+        
+        if (response.ok) {
+            const data = await response.json();
+            console.log('✅ SUCESSO:', data);
+            alert('Teste OK! Ficha ' + data.numero + ' criada.');
+        } else {
+            const error = await response.json();
+            console.error('❌ ERRO:', error);
+            alert('Erro: ' + error.error);
+        }
+    } catch (error) {
+        console.error('❌ EXCEÇÃO:', error);
+        alert('Exceção: ' + error.message);
+    }
+};
+
+// No console do navegador, execute:
+// testeSalvarFicha()
 });

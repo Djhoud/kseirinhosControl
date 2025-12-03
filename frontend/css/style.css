@@ -363,3 +363,184 @@ tr:hover {
     opacity: 0.6;
     pointer-events: none;
 }
+/* ESTILOS PARA RELATÓRIOS */
+.relatorio-completo {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.relatorio-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #eee;
+}
+
+.relatorio-header h2 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.periodo {
+    font-size: 1.1rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.data-geracao {
+    font-size: 0.9rem;
+    color: #888;
+    font-style: italic;
+}
+
+.resumo-geral {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.resumo-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #e9ecef;
+    transition: transform 0.3s;
+}
+
+.resumo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.resumo-valor {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.resumo-label {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.relatorio-section {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.relatorio-section h3 {
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.tabela-relatorio, .tabela-resumo {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.tabela-relatorio th, 
+.tabela-relatorio td,
+.tabela-resumo th,
+.tabela-resumo td {
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+}
+
+.tabela-relatorio th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+
+.tabela-resumo th {
+    background-color: #166088;
+    color: white;
+}
+
+.tabela-relatorio tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.tabela-relatorio tbody tr:hover {
+    background-color: #e9f7fe;
+}
+
+.total-row {
+    background-color: #e8f5e8 !important;
+    font-weight: bold;
+    font-size: 1.05rem;
+}
+
+.centrado {
+    text-align: center;
+}
+
+.direita {
+    text-align: right;
+}
+
+.sem-dados {
+    text-align: center;
+    padding: 40px;
+    color: #888;
+    font-style: italic;
+    background: white;
+    border-radius: 8px;
+    border: 2px dashed #ddd;
+}
+
+.relatorio-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    flex-wrap: wrap;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .relatorio-completo {
+        padding: 15px;
+    }
+    
+    .resumo-geral {
+        grid-template-columns: 1fr;
+    }
+    
+    .resumo-card {
+        padding: 15px;
+    }
+    
+    .resumo-valor {
+        font-size: 1.8rem;
+    }
+    
+    .relatorio-actions {
+        flex-direction: column;
+    }
+    
+    .relatorio-actions .btn {
+        width: 100%;
+    }
+}

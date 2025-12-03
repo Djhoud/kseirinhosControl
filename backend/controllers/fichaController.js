@@ -10,10 +10,10 @@ export const criarFicha = async (req, res) => {
             return res.status(400).json({ error: 'Número da ficha e itens são obrigatórios' });
         }
 
-        const fichaExistente = await Ficha.buscarPorNumero(numero);
-        if (fichaExistente) {
-            return res.status(400).json({ error: 'Já existe uma ficha com este número' });
-        }
+      const fichaExistente = await Ficha.buscarPorNumero(numero, true); // true = inclui confirmadas
+if (fichaExistente && fichaExistente.status === 'pendente') {
+    return res.status(400).json({ error: 'Já existe uma ficha PENDENTE com este número' });
+}
 
         const itensComPrecos = [];
         for (const item of itens) {
@@ -48,6 +48,30 @@ export const criarFicha = async (req, res) => {
     }
 };
 
+// Adicione esta função:
+export const historicoVendas = async (req, res) => {
+    try {
+        const { inicio, fim } = req.query;
+        
+        if (!inicio || !fim) {
+            return res.status(400).json({ error: 'Datas de início e fim são obrigatórias' });
+        }
+        
+        const result = await pool.query(
+            `SELECT v.*, 
+                    TO_CHAR(v.data_venda, 'DD/MM/YYYY HH24:MI') as data_formatada
+             FROM vendas_historico v
+             WHERE DATE(v.data_venda) BETWEEN $1 AND $2
+             ORDER BY v.data_venda DESC`,
+            [inicio, fim]
+        );
+        
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Erro ao buscar histórico:', error);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+};
 export const buscarFicha = async (req, res) => {
     try {
         const { numero } = req.params;
@@ -68,22 +92,38 @@ export const buscarFicha = async (req, res) => {
         res.status(500).json({ error: 'Erro interno do servidor' });
     }
 };
-
+// ADICIONE esta função se não existir:
+// Adicione esta função NO FINAL do arquivo:
 export const relatorioFichas = async (req, res) => {
+    console.log('📊 Recebida requisição de relatório:', req.query);
+    
     try {
         const { inicio, fim } = req.query;
 
         if (!inicio || !fim) {
-            return res.status(400).json({ error: 'Datas de início e fim são obrigatórias' });
+            return res.status(400).json({ 
+                error: 'Datas de início e fim são obrigatórias',
+                exemplo: '/api/fichas/relatorio?inicio=2024-01-01&fim=2024-12-31'
+            });
         }
 
+        console.log(`📅 Gerando relatório de ${inicio} a ${fim}`);
+        
         const relatorio = await Ficha.relatorioPorPeriodo(inicio, fim);
+        
+        console.log(`✅ Relatório gerado: ${relatorio.totalFichas} fichas, ${relatorio.totalItens} itens`);
+        
         res.json(relatorio);
+        
     } catch (error) {
-        console.error('Erro ao gerar relatório:', error);
-        res.status(500).json({ error: 'Erro interno do servidor' });
+        console.error('❌ Erro ao gerar relatório:', error);
+        res.status(500).json({ 
+            error: 'Erro interno do servidor',
+            detalhes: error.message 
+        });
     }
 };
+
 
 export const dashboard = async (req, res) => {
     try {
