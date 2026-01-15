@@ -2,10 +2,14 @@
   "name": "lanchonete-backend",
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "setup-db": "node config/setupDatabase.js"
+    "setup-db": "node config/setupDatabase.js",
+    "vercel-build": "echo 'No build step required for Node.js API'"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -17,10 +21,5 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
-  },
-  "description": "",
-  "main": "server.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  }
 }
